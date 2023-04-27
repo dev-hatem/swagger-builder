@@ -1,0 +1,18 @@
+{
+    "name": "creatify/swagger-builder",
+    "description": "Generate Swagger Yaml And Json Files Based On Php Array",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Creatify\\SwaggerBuilder\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "dev-hatem",
+            "email": "hatem.mohamed@creatifyteam.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
