@@ -13,8 +13,6 @@ class SwaggerBuilderServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $configDir = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Config';
-
         $this->mergeConfigFrom($configDir . DIRECTORY_SEPARATOR . 'swagger-builder.php', 'swagger');
 
         $this->commands([
@@ -28,6 +26,8 @@ class SwaggerBuilderServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $configDir = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Config';
+
         $this->publishes([
             __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'assets' => public_path('vendor' . DIRECTORY_SEPARATOR . 'swagger'),
         ]);
