@@ -1,4 +1,4 @@
-![pacakge](https://github.com/dev-hatem/swagger-builder/blob/master/Swagger%20Builder.png)  
+![pacakge](https://github.com/dev-hatem/swagger-builder/blob/master/docs.png)  
 
 # Swagger Builder
 
