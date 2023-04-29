@@ -13,8 +13,6 @@ class SwaggerBuilderServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom($configDir . DIRECTORY_SEPARATOR . 'swagger-builder.php', 'swagger');
-
         $this->commands([
             Builder::class,
             Generator::class
@@ -26,14 +24,18 @@ class SwaggerBuilderServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->loadRoutesFrom(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Routes' . DIRECTORY_SEPARATOR . 'swagger.php');
+
         $configDir = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'Config';
 
+        $this->mergeConfigFrom($configDir . DIRECTORY_SEPARATOR . 'swagger-builder.php', 'swagger');
+
         $this->publishes([
-            __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'assets' => public_path('vendor' . DIRECTORY_SEPARATOR . 'swagger'),
+            __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'assets' => public_path('vendor' . DIRECTORY_SEPARATOR . 'swagger'),
         ]);
 
         $this->publishes([
-            __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'docs.blade.php' => resource_path('views'),
+            __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'documentation.blade.php' => resource_path('views' . DIRECTORY_SEPARATOR . 'docs.blade.php'),
         ]);
 
         $this->publishes([

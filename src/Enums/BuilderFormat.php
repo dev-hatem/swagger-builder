@@ -1,5 +1,7 @@
 <?php
 
+namespace Creatify\SwaggerBuilder\Enums;
+
 enum BuilderFormat: string
 {
     case JSON = 'json';

@@ -2,8 +2,11 @@
 
 namespace Creatify\SwaggerBuilder\Commands;
 
+use Brick\VarExporter\VarExporter;
 use Creatify\SwaggerBuilder\BuilderFactory;
+use Creatify\SwaggerBuilder\Enums\BuilderFormat;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
 class Builder extends Command
 {
@@ -26,7 +29,16 @@ class Builder extends Command
     {
         $configurations = config('swagger-builder');
 
-        $format = $this->choice("Which Swagger Format Do You Need", ['json', 'yaml'], 'yaml');
+        $format = $this->choice("Which Swagger Format Do You Need", [BuilderFormat::JSON->value, BuilderFormat::YAML->value], $configurations['default_format']);
+
+        //$configurations['default'] = $format;
+
+        $content = str_replace(
+            ['BuilderFormat::YAML->value', 'BuilderFormat::JSON->value'] ,
+            $format === 'json' ? 'BuilderFormat::JSON->value' : 'BuilderFormat::YAML->value',
+            file_get_contents(config_path('swagger-builder.php')));
+
+        file_put_contents(config_path('swagger-builder.php'), $content);
 
         $builder = BuilderFactory::getBuilder($format);
 

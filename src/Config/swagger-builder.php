@@ -2,104 +2,55 @@
 
 return [
 
+    'docs_file_name' => 'doc',
+
+    'default_format' => Creatify\SwaggerBuilder\Enums\BuilderFormat::YAML->value,
+
     'project' => [
         'description' => 'Laravel Swagger Builder',
         'name'        => 'SwaggerBuilder',
-        'version'     => 1.0
+        'version'     => '1.0.0',
+        'servers'     => [
+            'https://jsonplaceholder.typicode.com',
+        ],
     ],
 
-    'save_dir' => __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'swagger',
+    'save_dir'  => public_path('swagger'),
+
+    'endpoints_dir' => public_path('swagger/endpoints'),
+
+    'has_pagination_links' => true,
+
+    'has_pagination_mata' => true,
 
     'response' => [
-        'general' => [
-            'identifierCode' => [
-                'type' => 'integer',
-                'format' => 'int32',
-            ],
-            'status' => [
-                'type' => 'boolean',
-            ],
-            'message' => [
-                'type' => 'string',
-            ],
-            'error' => [
-                'type' => 'object',
-            ],
+        'schema' => [
+            'identifierCode' => 'integer',
+            'status'         => 'boolean',
+            'message'        => 'string',
+            'error'          => 'string',
         ],
 
-        'exception_error' => [
-            'identifierCode' => [
-                'type' => 'integer',
-                'format' => 'int32',
-                'example' => 9999999999,
-            ],
-            'message' => [
-                'type' => 'string',
-            ],
-            'error' => [
-                'type' => 'object',
-            ]
+        'exception_error_schema' => [
+            'identifierCode' => ['type' => 'integer', 'example' => 9999999999],
+            'message'        => ['type' => 'string'],
+            'error'          => ['type' => 'string'],
         ],
 
-        'validation_error' => [
-            'identifierCode' => [
-                'type' => 'integer',
-                'format' => 'int32',
-                'example' => 8888888888,
-            ],
-            'message' => [
-                'type' => 'string',
-                'example' => 'Validation Error'
-            ],
-            'error' => [
-                'type' => 'object',
-            ]
+        'validation_error_schema' => [
+            'identifierCode' => ['type' => 'integer', 'example' => 8888888888],
+            'message'        => ['type' => 'string'],
+            'error'          => ['type' => 'string'],
         ],
-
-        'pagination' => [
-            'links' => [
-                'first' => [
-                    'type' => 'string',
-                ],
-                'last' => [
-                    'type' => 'string',
-                ],
-                'prev' => [
-                    'type' => 'string',
-                ],
-                'next' => [
-                    'type' => 'string',
-                ],
-            ],
-            'meta' => [
-                'current_page' => [
-                    'type' => 'integer',
-                ],
-                'from' => [
-                    'type' => 'integer',
-                ],
-                'last_page' => [
-                    'type' => 'integer',
-                ],
-                'links' => [
-                    'type' => 'array',
-                    'items' => [
-                        'type' => 'object',
-                        'properties' => [
-                            'url' => [
-                                'type' => 'string',
-                            ],
-                            'label' => [
-                                'type' => 'string',
-                            ],
-                            'active' => [
-                                'type' => 'boolean',
-                            ],
-                        ],
-                    ],
-                ],
-            ]
-        ]
-
+    ],
+    'endpoints' => [
+        'paging'        => \Creatify\SwaggerBuilder\Endpoints\Page::class,
+        'index'         => \Creatify\SwaggerBuilder\Endpoints\Index::class,
+        'show'          => \Creatify\SwaggerBuilder\Endpoints\Show::class,
+        'store'         => \Creatify\SwaggerBuilder\Endpoints\Store::class,
+        'update'        => \Creatify\SwaggerBuilder\Endpoints\Update::class,
+        'delete'        => \Creatify\SwaggerBuilder\Endpoints\Delete::class,
+        'restore'       => \Creatify\SwaggerBuilder\Endpoints\Restore::class,
+        'forceDelete'   => \Creatify\SwaggerBuilder\Endpoints\ForceDelete::class,
     ]
 ];
