@@ -1,3 +1,5 @@
+![pacakge](https://github.com/dev-hatem/swagger-builder/blob/master/Swagger%20Builder.png)  
+
 # Swagger Builder
 
 Generate awesome swagger docs for your apis from php array
@@ -17,6 +19,14 @@ composer require creatify/swagger-builder
 
 Creatify\SwaggerBuilder\Providers\SwaggerBuilderServiceProvider::class,
 ```
+
+```php
+# publish the needed files
+php artisan vendor:publish
+
+#and select the SwaggerBuilderServiceProvider files
+```
+
 ```php
 # run the below command to start build your docs
 
@@ -63,6 +73,33 @@ return [
 #start generating 
 php artisan swagger:generate
 ```
+
+1. Manage most used end points like:
+ * page
+ * index
+ * store
+ * show
+ * delete
+ * update
+ * restore
+ * force delete
+2. security is optional
+3. suggestion to the expected route path or can enter it
+4. detect the params from the given route path
+5. handle sorting, pagination length, search
+6. generate separate file for the given model for all above opetations
+7. support json and yaml
+8. can extend the above operations and add others
+9. have the route `/documentation` to view the generated docs
+10. supportes to multiple servers url from the config file `swagger-builder.php`
+
+![pacakge](https://github.com/dev-hatem/swagger-builder/blob/master/Screenshot%202023-04-29%20153515.png)  
+
+![pacakge](https://github.com/dev-hatem/swagger-builder/blob/master/Screenshot%202023-04-29%20153536.png)  
+
+![pacakge](https://github.com/dev-hatem/swagger-builder/blob/master/Screenshot%202023-04-29%20153701.png)  
+
+
 
 
 
