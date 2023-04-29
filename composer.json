@@ -13,7 +13,7 @@
             "email": "hatem.mohamed@creatifyteam.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
        
     }
