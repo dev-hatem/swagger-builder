@@ -2,11 +2,11 @@
 
 namespace Creatify\SwaggerBuilder\Commands;
 
-use Brick\VarExporter\VarExporter;
+
 use Creatify\SwaggerBuilder\BuilderFactory;
 use Creatify\SwaggerBuilder\Enums\BuilderFormat;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
+
 
 class Builder extends Command
 {
