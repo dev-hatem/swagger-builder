@@ -35,7 +35,7 @@ class SwaggerBuilderServiceProvider extends ServiceProvider
         ]);
 
         $this->publishes([
-            __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'documentation.blade.php' => resource_path('views' . DIRECTORY_SEPARATOR . 'docs.blade.php'),
+            __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'documentation.blade.php' => resource_path('views' . DIRECTORY_SEPARATOR . 'documentation.blade.php'),
         ]);
 
         $this->publishes([
