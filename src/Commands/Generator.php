@@ -243,7 +243,7 @@ class Generator extends Command
 
     private function isYaml()
     {
-        $this->configurations['default_format'] === BuilderFormat::YAML->value;
+        return $this->configurations['default_format'] === BuilderFormat::YAML->value;
     }
 
     
