@@ -2,13 +2,10 @@
 
 namespace Creatify\SwaggerBuilder\Commands;
 
-use Brick\VarExporter\VarExporter;
-use Creatify\SwaggerBuilder\BuilderFactory;
 use Creatify\SwaggerBuilder\Enums\BuilderFormat;
 use Creatify\SwaggerBuilder\SwaggerBuilder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Symfony\Component\Yaml\Yaml;
 
@@ -22,7 +19,7 @@ class Generator extends Command
      *
      * @var string
      */
-    protected $signature = 'swagger:gen';
+    protected $signature = 'swagger:generate';
 
     /**
      * The console command description.
@@ -33,9 +30,8 @@ class Generator extends Command
 
     /**
      * @return int
-     * @throws \Brick\VarExporter\ExportException
      */
-    public function handle()
+    public function handle():int
     {
         $this->configurations = config('swagger-builder');
 
@@ -65,6 +61,12 @@ class Generator extends Command
         return Command::SUCCESS;
     }
 
+    /**
+     * @param $endpoint
+     * @param $model
+     * @param $schema
+     * @return int|void
+     */
     private function handleEndpoint($endpoint, $model, $schema)
     {
         $endpoint = new $endpoint;
@@ -196,10 +198,6 @@ class Generator extends Command
         File::put($path, Yaml::dump($data, 20, 1, Yaml::DUMP_OBJECT));
 
 
-
-//        if (!in_array($file_name.'#paths', array_column($this->documentation['paths']['allOf'], '$ref')))
-//            $this->documentation['paths']['allOf'][] = ['$ref' => $file_name . '#paths'];
-
         if (!isset($this->documentation['paths'][$route_path]))
             $this->documentation['paths'][$route_path] = [];
 
@@ -210,7 +208,10 @@ class Generator extends Command
         $this->info("swagger docs generated success");
     }
 
-    private function getDocsContent()
+    /**
+     * @return bool
+     */
+    private function getDocsContent() :bool
     {
         $path = $this->getDocsPath();
 
@@ -225,12 +226,18 @@ class Generator extends Command
         return true;
     }
 
-    private function getDocsPath()
+    /**
+     * @return string
+     */
+    private function getDocsPath() :string
     {
         return $this->configurations['save_dir'] . DIRECTORY_SEPARATOR . $this->configurations['docs_file_name'] . '.' . $this->configurations['default_format'];
     }
 
-    private function paginationMeta()
+    /**
+     * @return array
+     */
+    private function paginationMeta() :array
     {
         return [
             'type' => 'object',
@@ -265,7 +272,10 @@ class Generator extends Command
         ];
     }
 
-    private function paginationLinks()
+    /**
+     * @return array
+     */
+    private function paginationLinks() :array
     {
         return [
             'type' => 'object',
@@ -286,7 +296,11 @@ class Generator extends Command
         ];
     }
 
-    private function handleModel($model)
+    /**
+     * @param $model
+     * @return void
+     */
+    private function handleModel($model) :void
     {
         $endpoints = $this->configurations['endpoints'];
 
@@ -304,7 +318,13 @@ class Generator extends Command
         }
     }
 
-    private function buildResponseSchema($endpoint, $baseSchema, $isDelete = false)
+    /**
+     * @param $endpoint
+     * @param $baseSchema
+     * @param bool $isDelete
+     * @return array
+     */
+    private function buildResponseSchema($endpoint, $baseSchema, bool $isDelete = false) :array
     {
 
         $generalResponse = [];
@@ -356,347 +376,16 @@ class Generator extends Command
         return $properties;
     }
 
-    private function prepareObject($data)
+    /**
+     * @param $data
+     * @return mixed
+     */
+    private function prepareObject($data):array
     {
         foreach ($data as $key => $value){
             if (is_string($value))
                 $data[$key] = ['type' => $value];
         }
         return $data;
-    }
-    private function store()
-    {
-        $method = 'post';
-
-        $template = [
-            $method => [
-                'consumes' => [
-                    'application/json',
-                ],
-                'parameters' => [
-                    [
-                        'name' => 'properties',
-                        'in' => 'body',
-                        'description' => 'Object containing key-value pairs of properties for the object',
-                        'schema' => [
-                            'type' => 'object',
-                            'properties' => $this->configurations['store'],
-                        ]
-                    ],
-                ],
-                'security' => [
-                    [
-                        'Bearer' => [],
-                    ],
-                ],
-                'responses' => [
-                    200 => [
-                        'description' => 'Successful operation',
-                        'schema'      => $this->successResponse(true, false)
-                    ],
-                    '40x' => $this->userError(),
-                    '50x' => $this->serverError()
-                ]
-            ],
-        ];
-
-        $tag = $this->ask('Enter Tag Name: ', $this->dir);
-        $template[$method]['tags'] = [$tag];
-
-        $summary = $this->ask('Enter Endpoint Summary: ', 'Add New ' . $this->dir);
-        $template[$method]['summary'] = $summary;
-
-        $description = $this->ask('Enter Endpoint Description: ', 'Add New ' . $this->dir);
-        $template[$method]['description'] = $description;
-
-        $hasSecurity = $this->confirm('Endpoint Has Security', true);
-        if (!$hasSecurity){
-            unset($template[$method]['security']);
-        }
-
-        $this->saveFile($template, __FUNCTION__);
-    }
-
-    public function delete()
-    {
-        $method = 'delete';
-
-        $template = [
-            $method => [
-                'parameters' => [
-                    [
-                        'name' => 'id',
-                        'in' => 'path',
-                        'description' => 'item id',
-                    ],
-                ],
-                'security' => [
-                    [
-                        'Bearer' => [],
-                    ],
-                ],
-                'responses' => [
-                    200 => [
-                        'description' => 'Successful operation',
-                        'schema'      => $this->prepareSuccessResponseWithoutPagination()
-                    ],
-                    '40x' => $this->userError(),
-                    '50x' => $this->serverError()
-                ]
-            ],
-        ];
-
-        $tag = $this->ask('Enter Tag Name: ', $this->dir);
-        $template[$method]['tags'] = [$tag];
-
-        $summary = $this->ask('Enter Endpoint Summary: ', 'delete ' . $this->dir . ' by id');
-        $template[$method]['summary'] = $summary;
-
-        $description = $this->ask('Enter Endpoint Description: ', 'delete ' . $this->dir . ' by id');
-        $template[$method]['description'] = $description;
-
-        $hasSecurity = $this->confirm('Endpoint Has Security', true);
-        if (!$hasSecurity){
-            unset($template[$method]['security']);
-        }
-
-        $this->saveFile($template, __FUNCTION__);
-    }
-
-    public function update()
-    {
-        $method = 'put';
-
-        $template = [
-            $method => [
-                'consumes' => [
-                    'application/json',
-                ],
-                'parameters' => [
-                    [
-                        'name' => 'id',
-                        'in' => 'path',
-                        'description' => 'item id',
-                    ],
-                    [
-                        'name' => 'properties',
-                        'in' => 'body',
-                        'description' => 'Object containing key-value pairs of properties for the object',
-                        'schema' => [
-                            'type' => 'object',
-                            'properties' => $this->configurations['update'],
-                        ]
-                    ],
-                ],
-                'security' => [
-                    [
-                        'Bearer' => [],
-                    ],
-                ],
-                'responses' => [
-                    200 => [
-                        'description' => 'Successful operation',
-                        'schema'      => $this->successResponse(true, false)
-                    ],
-                    '40x' => $this->userError(),
-                    '50x' => $this->serverError()
-                ]
-            ],
-        ];
-
-        $tag = $this->ask('Enter Tag Name: ', $this->dir);
-        $template[$method]['tags'] = [$tag];
-
-        $summary = $this->ask('Enter Endpoint Summary: ', 'Update ' . $this->dir . ' by id');
-        $template[$method]['summary'] = $summary;
-
-        $description = $this->ask('Enter Endpoint Description: ', 'Update ' . $this->dir . ' by id');
-        $template[$method]['description'] = $description;
-
-        $hasSecurity = $this->confirm('Endpoint Has Security', true);
-        if (!$hasSecurity){
-            unset($template[$method]['security']);
-        }
-
-        $this->saveFile($template, __FUNCTION__);
-    }
-
-    ############### CORE ####################
-
-
-
-    private function prepareSuccessResponse()
-    {
-        return [
-            'type' => 'object',
-            'properties' => [
-                'data' => [],
-                'links' => $this->paginationLinks(),
-                'meta' => $this->paginationMeta(),
-                'identifierCode' => [
-                    'type' => 'integer',
-                    'format' => 'int32',
-                ],
-                'status' => [
-                    'type' => 'boolean',
-                ],
-                'message' => [
-                    'type' => 'string',
-                ],
-                'error' => [
-                    'type' => 'object',
-                ],
-            ]
-        ];
-
-    }
-
-    private function prepareSuccessResponseWithoutPagination()
-    {
-       $response = $this->prepareSuccessResponse();
-
-        unset($response['properties']['links']);
-        unset($response['properties']['meta']);
-
-        return $response;
-    }
-
-    private function successResponse($isSingle = true, $hasPagination = false)
-    {
-        if (!$isSingle)
-            return $this->multiSuccessResponse($hasPagination);
-
-        $response = $this->prepareSuccessResponseWithoutPagination();
-
-        $response['properties']['data'] = [
-            'type' => 'object',
-            'properties' => $this->getEndPointObjectSchema(),
-        ];
-
-        return $response;
-    }
-
-    private function multiSuccessResponse($hasPagination = false)
-    {
-        $response = $hasPagination ? $this->prepareSuccessResponse() : $this->prepareSuccessResponseWithoutPagination();
-
-        $response['properties']['data'] = [
-            'type' => 'array',
-            'items' => [
-                'type' => 'object',
-                'properties' => $this->getEndPointObjectSchema(),
-            ],
-        ];
-
-        return $response;
-    }
-
-    private function saveFile($template, $name)
-    {
-        $path = base_path('swagger-generator' . DIRECTORY_SEPARATOR . $this->dir . DIRECTORY_SEPARATOR . $name . '.yaml');
-
-        file_put_contents($path, Yaml::dump($template, 20, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK));
-
-        $this->info("swagger for endpoint $name generated success");
-
-
-
-
-
-
-        if (!File::exists($path)){
-            $this->error(sprintf('undefined model %s', $dirName));
-            return Command::FAILURE;
-        }
-
-        $this->configurations = File::getRequire($path);
-        $this->dir = $dirName;
-
-        $endpoints = empty($endpoints) || in_array($endpoints[0], ['*', 'all']) ? ['index', 'show', 'paging', 'store', 'update', 'delete'] : $endpoints;
-
-        $this->newLine();
-        $this->info('generating yaml files for this endpoints');
-        $this->newLine();
-
-
-
-
-        $path = config('swagger-builder.save_dir') . DIRECTORY_SEPARATOR .  config('swagger-builder.docs_file_name');
-
-        $files = [];
-
-        foreach (glob($path . '.*') as $file){
-            $files[] = pathinfo($file, PATHINFO_EXTENSION);
-        }
-
-        if (empty($files))
-            return $this->error("Please Build Docs First by command swagger:build");
-
-        $file  = $files[0];
-
-        if (count($files) > 0)
-            $file = $this->choice('Which Docs Do You Want To Generate', $files, $files[0]);
-
-        $path.=".$file";
-        $base = '<?php return %s;';
-
-        $docs = Yaml::parseFile($path);
-
-        $docs['paths'][] = [];
-
-
-
-
-        dd(sprintf($base, VarExporter::export(Yaml::parseFile($path),VarExporter::TRAILING_COMMA_IN_ARRAY)));
-        file_put_contents('z.php', sprintf($base, VarExporter::export(Yaml::parseFile($path),VarExporter::TRAILING_COMMA_IN_ARRAY)));
-
-
-        // get docs path here
-
-        // append data in path key
-
-
-
-
-        $path = base_path('swagger-generator' . DIRECTORY_SEPARATOR . $dirName . DIRECTORY_SEPARATOR . 'config.php');
-
-        if (!File::exists($path)){
-            $this->error(sprintf('undefined model %s', $dirName));
-            return Command::FAILURE;
-        }
-
-        $this->configurations = File::getRequire($path);
-        $this->dir = $dirName;
-
-        $endpoints = empty($endpoints) || in_array($endpoints[0], ['*', 'all']) ? ['index', 'show', 'paging', 'store', 'update', 'delete'] : $endpoints;
-
-        $this->newLine();
-        $this->info('generating yaml files for this endpoints');
-        $this->newLine();
-
-        $this->output->table($endpoints, []);
-        $this->newLine();
-
-        $this->output->progressStart(count($endpoints));
-        $this->newLine();
-        $this->newLine();
-
-        foreach ($endpoints as $endpoint){
-            if (method_exists($this, $endpoint)){
-                $this->info("starting generate yaml file for endpoint $endpoint");
-                call_user_func([$this, $endpoint]);
-                $this->newLine();
-            } else{
-                $this->newLine();
-                $this->warn(sprintf('undefined endpoint %s', $endpoint));
-            }
-            $this->newLine();
-            $this->output->progressAdvance();
-            $this->newLine();
-        }
-
-        $this->output->progressFinish();
-
-
     }
 }
