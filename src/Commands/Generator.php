@@ -195,15 +195,22 @@ class Generator extends Command
 
         $data['paths'][$route_path][$endpoint->method()] = $template;
 
-        File::put($path, Yaml::dump($data, 20, 1, Yaml::DUMP_OBJECT));
 
+        if ($this->isYaml())
+            File::put($path, Yaml::dump($data, 20, 1, Yaml::DUMP_OBJECT));
+        else
+            File::put($path, json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
+        
         if (!isset($this->documentation['paths'][$route_path]))
             $this->documentation['paths'][$route_path] = [];
 
         $this->documentation['paths'][$route_path][$endpoint->method()] = $template;
 
-        File::put($this->getDocsPath(), Yaml::dump($this->documentation, 20, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK));
+        if ($this->isYaml())
+            File::put($this->getDocsPath(), Yaml::dump($this->documentation, 20, 2, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK));
+        else
+            File::put($this->getDocsPath(), json_encode($this->documentation, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
         $this->info("swagger docs generated success");
     }
@@ -234,6 +241,12 @@ class Generator extends Command
         return $this->configurations['save_dir'] . DIRECTORY_SEPARATOR . $this->configurations['docs_file_name'] . '.' . $this->configurations['default_format'];
     }
 
+    private function isYaml()
+    {
+        $this->configurations['default_format'] === BuilderFormat::YAML->value;
+    }
+
+    
     /**
      * @return array
      */
