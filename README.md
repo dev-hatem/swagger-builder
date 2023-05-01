@@ -16,22 +16,18 @@ composer require creatify/swagger-builder
 
 ```php
 # register the package service provider in config/app.php in providers array
-
-Creatify\SwaggerBuilder\Providers\SwaggerBuilderServiceProvider::class,
 ```
 
 ```php
 # publish the needed files
-php artisan vendor:publish
-
-#and select the SwaggerBuilderServiceProvider files
+php artisan vendor:publish --provider="Creatify\SwaggerBuilder\Providers\SwaggerBuilderServiceProvider"
+[OR]
+php artisan vendor:publish --tag=swagger-builder
 ```
 
 ```php
 # run the below command to start build your docs
-
 php artisan swagger:build
-
 # then select your document format [YAML - JSON]
 ```
 ```txt
@@ -108,8 +104,6 @@ php artisan swagger:generate
 
 Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
 
 ## License
 
