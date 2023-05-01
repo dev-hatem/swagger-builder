@@ -1,4 +1,4 @@
-![pacakge](https://github.com/dev-hatem/swagger-builder/blob/master/docs.png)  
+![pacakge](https://github.com/dev-hatem/swagger-builder/blob/master/screenshots/docs.png)  
 
 # Swagger Builder
 
@@ -93,11 +93,11 @@ php artisan swagger:generate
 9. have the route `/documentation` to view the generated docs
 10. supportes to multiple servers url from the config file `swagger-builder.php`
 
-![pacakge](https://github.com/dev-hatem/swagger-builder/blob/master/Screenshot%202023-04-29%20153515.png)  
+![pacakge](https://github.com/dev-hatem/swagger-builder/blob/master/screenshots/Screenshot%202023-04-29%20153515.png)  
 
-![pacakge](https://github.com/dev-hatem/swagger-builder/blob/master/Screenshot%202023-04-29%20153536.png)  
+![pacakge](https://github.com/dev-hatem/swagger-builder/blob/master/screenshots/Screenshot%202023-04-29%20153536.png)  
 
-![pacakge](https://github.com/dev-hatem/swagger-builder/blob/master/Screenshot%202023-04-29%20153701.png)  
+![pacakge](https://github.com/dev-hatem/swagger-builder/blob/master/screenshots/Screenshot%202023-04-29%20153701.png)  
 
 
 

@@ -83,9 +83,9 @@ class Generator extends Command
         $params = [];
 
         if (count($matches[0]) > 0){
-         foreach ($matches[0] as $param){
-             $params[] = str_replace(['{', '}'], ['', ''], $param);
-         }
+            foreach ($matches[0] as $param){
+                $params[] = str_replace(['{', '}'], ['', ''], $param);
+            }
         }
 
         $template['summary'] = str_replace(':model', ucwords(Str::plural($model)), $endpoint->description());
@@ -165,6 +165,8 @@ class Generator extends Command
             $template['requestBody']['content']['application/json']['schema']['properties'] = $this->prepareObject($schema[$endpoint->isStore() ? 'store' : 'update']);
         }
 
+
+
         $schema['schema'] = $this->prepareObject($schema['schema']);
 
         if (isset($this->documentation['components']['schema'][$model])){
@@ -201,7 +203,7 @@ class Generator extends Command
         else
             File::put($path, json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
-        
+
         if (!isset($this->documentation['paths'][$route_path]))
             $this->documentation['paths'][$route_path] = [];
 
@@ -246,7 +248,7 @@ class Generator extends Command
         return $this->configurations['default_format'] === BuilderFormat::YAML->value;
     }
 
-    
+
     /**
      * @return array
      */
@@ -379,8 +381,8 @@ class Generator extends Command
         ];
 
         if ($endpoint->hasPagination()){
-          $properties['properties']['meta'] = $this->paginationMeta();
-          $properties['properties']['links'] = $this->paginationLinks();
+            $properties['properties']['meta'] = $this->paginationMeta();
+            $properties['properties']['links'] = $this->paginationLinks();
         }
 
         $properties['properties'] =  array_merge($properties['properties'], $generalResponse);
@@ -396,9 +398,32 @@ class Generator extends Command
     private function prepareObject($data):array
     {
         foreach ($data as $key => $value){
+            if (($key === 'type' && is_string($value) && in_array($value, $this->dataTypes())) || in_array($key, ['example', 'enum']))
+                continue;
+
             if (is_string($value))
                 $data[$key] = ['type' => $value];
+            else
+                $data[$key] = $this->prepareObject($value);
         }
         return $data;
+    }
+
+    private function dataTypes() :array
+    {
+        return  [
+            'object',
+            'integer',
+            'long',
+            'float',
+            'double',
+            'string',
+            'byte',
+            'binary',
+            'boolean',
+            'date',
+            'dateTime',
+            'password',
+        ];
     }
 }

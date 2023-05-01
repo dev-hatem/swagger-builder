@@ -29,8 +29,9 @@ class Restore implements Endpoint
                         ]
                     ]
                 ],
+
                 404 => [
-                    'description' => 'Successful operation',
+                    'description' => 'Not Found',
                     'content'=> [
                         'application/json' => [
                             'schema'      => [
@@ -40,7 +41,7 @@ class Restore implements Endpoint
                     ]
                 ],
                 500 => [
-                    'description' => 'Successful operation',
+                    'description' => 'Server Error',
                     'content'=> [
                         'application/json' => [
                             'schema'      => [
@@ -61,7 +62,7 @@ class Restore implements Endpoint
 
     public function description(): string
     {
-        return 'Restore :model By Identifer';
+        return 'Restore :model By Identifier';
     }
 
     public function method(): string
@@ -86,7 +87,7 @@ class Restore implements Endpoint
 
     public function expectedRoute(): string
     {
-        return sprintf('/%s/restore/{id}', Str::lower(Str::plural($this->model)));
+        return sprintf('/%s/restore/{id}', Str::lower(Str::singular($this->model)));
     }
 
 

@@ -19,28 +19,34 @@ return [
 
     'endpoints_dir' => public_path('swagger/endpoints'),
 
-    'has_pagination_links' => true,
-
-    'has_pagination_mata' => true,
 
     'response' => [
+        // 200 additional info with data
         'schema' => [
+            /*
             'identifierCode' => 'integer',
             'status'         => 'boolean',
             'message'        => 'string',
             'error'          => 'string',
+            */
         ],
 
+        //50x errors response standard format
         'exception_error_schema' => [
+            /*
             'identifierCode' => ['type' => 'integer', 'example' => 9999999999],
             'message'        => ['type' => 'string'],
             'error'          => ['type' => 'string'],
+            */
         ],
 
+        //422 errors response standard format
         'validation_error_schema' => [
+            /*
             'identifierCode' => ['type' => 'integer', 'example' => 8888888888],
             'message'        => ['type' => 'string'],
             'error'          => ['type' => 'string'],
+            */
         ],
     ],
     'endpoints' => [

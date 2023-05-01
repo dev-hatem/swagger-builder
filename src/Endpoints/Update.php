@@ -41,7 +41,7 @@ class Update implements Endpoint
                     ]
                 ],
                 422 => [
-                    'description' => 'Successful operation',
+                    'description' => 'Validation Error',
                     'content'=> [
                         'application/json' => [
                             'schema'      => [
@@ -51,7 +51,7 @@ class Update implements Endpoint
                     ]
                 ],
                 404 => [
-                    'description' => 'Successful operation',
+                    'description' => 'Not Found',
                     'content'=> [
                         'application/json' => [
                             'schema'      => [
@@ -61,7 +61,7 @@ class Update implements Endpoint
                     ]
                 ],
                 500 => [
-                    'description' => 'Successful operation',
+                    'description' => 'Server Error',
                     'content'=> [
                         'application/json' => [
                             'schema'      => [
@@ -107,7 +107,7 @@ class Update implements Endpoint
 
     public function expectedRoute(): string
     {
-        return sprintf('/%s/{id}', Str::lower(Str::plural($this->model)));
+        return sprintf('/%s/{id}', Str::lower(Str::singular($this->model)));
     }
 
     public function isStore(): bool

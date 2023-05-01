@@ -29,7 +29,7 @@ class Index implements Endpoint
                     ]
                 ],
                 404 => [
-                    'description' => 'Successful operation',
+                    'description' => 'Not Found',
                     'content'=> [
                         'application/json' => [
                             'schema'      => [
@@ -39,7 +39,7 @@ class Index implements Endpoint
                     ]
                 ],
                 500 => [
-                    'description' => 'Successful operation',
+                    'description' => 'Server Error',
                     'content'=> [
                         'application/json' => [
                             'schema'      => [
