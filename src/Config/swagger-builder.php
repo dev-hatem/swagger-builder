@@ -18,7 +18,8 @@ return [
     'save_dir'  => public_path('swagger'),
 
     'endpoints_dir' => public_path('swagger/endpoints'),
-
+    
+    'save_generated_files' => false,
 
     'response' => [
         // 200 additional info with data
