@@ -34,6 +34,13 @@ php artisan swagger:build
 # make new directory to save the php array which contain the structure of your endpoints
  by default the path in public/swagger/endpoints
 ```
+
+```php
+# add service provider in config/app.php
+Creatify\SwaggerBuilder\Providers\SwaggerBuilderServiceProvider::class,
+```
+
+
 ```txt
 # make new php file which represents your endpoints with the below structure
 ```
