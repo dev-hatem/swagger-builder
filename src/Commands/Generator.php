@@ -44,8 +44,11 @@ class Generator extends Command
 
         $models = [];
 
-        foreach (glob($path . DIRECTORY_SEPARATOR . '*.php') as $model){
-            $models[ucwords(pathinfo($model, PATHINFO_FILENAME))] = $model;
+          foreach (File::allFiles($path) as $endpointFile){
+            if ($endpointFile->isFile()){
+                $name = sprintf('%s => [%s]', $endpointFile->getFilenameWithoutExtension(), $endpointFile->getRelativePathname());
+                $models[ucwords($name)] = $endpointFile->getRealPath();
+            }
         }
 
         $selectedModel = $this->choice('Which Docs Do You Want To Generate', array_keys(array_merge(['*' => 'All'], $models)), '*');
@@ -198,11 +201,12 @@ class Generator extends Command
         $data['paths'][$route_path][$endpoint->method()] = $template;
 
 
-        if ($this->isYaml())
-            File::put($path, Yaml::dump($data, 20, 1, Yaml::DUMP_OBJECT));
-        else
-            File::put($path, json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-
+         if($this->configurations['save_generated_files']){
+            if ($this->isYaml())
+                File::put($path, Yaml::dump($data, 20, 1, Yaml::DUMP_OBJECT));
+            else
+                File::put($path, json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+        }
 
         if (!isset($this->documentation['paths'][$route_path]))
             $this->documentation['paths'][$route_path] = [];
