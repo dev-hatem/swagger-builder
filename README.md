@@ -17,29 +17,29 @@ composer require creatify/swagger-builder
 ```php
 # register the package service provider in config/app.php in providers array
 ```
+```php
+Creatify\SwaggerBuilder\Providers\SwaggerBuilderServiceProvider::class,
+```
 
 ```php
 # publish the needed files
+```
+```php
 php artisan vendor:publish --provider="Creatify\SwaggerBuilder\Providers\SwaggerBuilderServiceProvider"
-[OR]
+```
+```php
 php artisan vendor:publish --tag=swagger-builder
 ```
 
+##### run the below command to start build your docs and select file format
 ```php
-# run the below command to start build your docs
 php artisan swagger:build
-# then select your document format [YAML - JSON]
 ```
+
 ```txt
 # make new directory to save the php array which contain the structure of your endpoints
  by default the path in public/swagger/endpoints
 ```
-
-```php
-# add service provider in config/app.php
-Creatify\SwaggerBuilder\Providers\SwaggerBuilderServiceProvider::class,
-```
-
 
 ```txt
 # make new php file which represents your endpoints with the below structure
